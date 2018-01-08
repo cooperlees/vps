@@ -12,10 +12,6 @@ from typing import Any, Union
 LOG = logging.getLogger(__file__)
 
 
-async def hello(request: Any) -> web.Response:
-    return web.Response(text="Hello, world")
-
-
 def _handle_debug(
     ctx: click.core.Context,
     param: Union[click.core.Option, click.core.Parameter],
@@ -31,19 +27,24 @@ def _handle_debug(
     return debug
 
 
+async def hello(request: Any) -> web.Response:
+    return web.Response(text="Hello, world")
+
+
 async def async_main(
     debug: bool,
     port: int,
 ) -> None:
     loop = asyncio.get_event_loop()
-    server = web.Server(hello)
+    aiohttp_server = web.Server(hello)
     sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
     sock.bind(('::', port))
     try:
-        http_server = await loop.create_server(server, sock=sock)
+        http_server = await loop.create_server(aiohttp_server, sock=sock)
         LOG.info(f"Listenening on [::]:{port} ...")
-        await asyncio.sleep(2**64)  # COOPER - Fix to wait nicely on server
-    finally:
+        await http_server.wait_closed()
+    except asyncio.CancelledError:
+        LOG.info(f"Closing server on [::]:{port} ...")
         http_server.close()
         await http_server.wait_closed()
 
@@ -62,9 +63,12 @@ def main(
 ) -> None:
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(async_main(debug, port))
+        async_main_task = loop.create_task(async_main(debug, port))
+        loop.run_until_complete(async_main_task)
     except KeyboardInterrupt:
-        ...
+        LOG.debug("Canceling async_main")
+        async_main_task.cancel()
+        loop.run_until_complete(async_main_task)
     finally:
         loop.close()
 
