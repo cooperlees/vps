@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from peerme import __version__
+from vps import __version__
 from setuptools import setup, find_packages
 
 setup(
