@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 from vps import __version__
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='vps',
     version=__version__,
-    packages=find_packages(),
+    packages=["vps"],
     url='http://github.com/cooperlees/vps',
     license='BSD 2-Clause',
     author='Cooper Lees',
@@ -17,6 +17,7 @@ setup(
         'Topic :: Internet',
         'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Intended Audience :: System Administrators',
         'Development Status :: 3 - Alpha',
     ],

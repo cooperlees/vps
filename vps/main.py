@@ -5,10 +5,11 @@ import click
 import logging
 import socket
 
-from aiohttp import web
-from typing import Any, Union
+from aiohttp import web, web_request
+from typing import Union
 
 
+HOSTNAME = socket.gethostname()
 LOG = logging.getLogger(__file__)
 
 
@@ -27,8 +28,8 @@ def _handle_debug(
     return debug
 
 
-async def hello(request: Any) -> web.Response:
-    return web.Response(text="Hello, world")
+async def hello(request: web_request.BaseRequest) -> web.Response:
+    return web.Response(text=f"Hello from {HOSTNAME}")
 
 
 async def async_main(
@@ -53,7 +54,7 @@ async def async_main(
 @click.option('--debug', is_flag=True, callback=_handle_debug,
               show_default=True, help='Turn on debug logging')
 @click.option(
-    '-p', '--port', default=80, help='TCP port to listen on for HTTP',
+    '-p', '--port', default=6969, help='TCP port to listen on for HTTP',
 )
 @click.pass_context
 def main(
