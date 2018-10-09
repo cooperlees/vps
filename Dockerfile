@@ -8,5 +8,6 @@ RUN chown -R nobody /web
 RUN pip install --upgrade pip setuptools
 RUN cd /web && pip install .
 
+EXPOSE 6968/tcp
 EXPOSE 6969/tcp
 CMD ["vps", "--debug"]
