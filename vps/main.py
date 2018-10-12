@@ -9,6 +9,8 @@ import ssl
 from aiohttp import web, web_request
 from typing import Union
 
+from vps import __version__
+
 
 HOSTNAME = socket.gethostname()
 HTTPS_URL = f"https://{HOSTNAME}/"
@@ -30,7 +32,10 @@ def _handle_debug(
 
 
 async def hello(request: web_request.BaseRequest) -> web.Response:
-    return web.Response(text=f"Hello from {HOSTNAME}")
+    try:
+        return web.Response(text=f"Hello from {HOSTNAME}")
+    except ssl.SSLError as ssle:
+        LOG.error(f"{request} had an SSL Error: {ssle}")
 
 
 # TODO: Add support for request's endpoint once webserver has some
@@ -99,6 +104,7 @@ async def async_main(
     show_default=True,
     help="Path to ssl key file",
 )
+@click.version_option(version=__version__, prog_name="vps")
 @click.pass_context
 def main(ctx: click.Context, **kwargs) -> None:
     loop = asyncio.get_event_loop()
