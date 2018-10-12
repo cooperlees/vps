@@ -23,5 +23,4 @@ setup(
     ],
     install_requires=["aiohttp", "click"],
     entry_points={"console_scripts": ["vps = vps.main:main"]},
-    include_package_data=True,
 )
