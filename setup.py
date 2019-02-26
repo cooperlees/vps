@@ -3,10 +3,11 @@
 from vps import __version__
 from setuptools import setup
 
+
 setup(
     name="vps",
     version=__version__,
-    packages=["vps"],
+    packages=["vps", "vps.tests"],
     url="http://github.com/cooperlees/vps",
     license="BSD 2-Clause",
     author="Cooper Lees",
@@ -23,4 +24,5 @@ setup(
     ],
     install_requires=["aiohttp", "click"],
     entry_points={"console_scripts": ["vps = vps.main:main"]},
+    test_suite="vps.tests.base",
 )
