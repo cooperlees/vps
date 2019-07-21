@@ -32,6 +32,9 @@ def _handle_debug(
 
 
 async def hello(request: web_request.BaseRequest) -> web.Response:
+    print(f"Request = {request}")  # COOPER
+    print(dir(request))  # COOPER
+    print(vars(request))  # COOPER
     try:
         return web.Response(text=f"Hello from {HOSTNAME}")
     except ssl.SSLError as ssle:

@@ -3,7 +3,7 @@
 from collections import namedtuple
 
 __version_info__ = namedtuple("version_info", "major minor micro releaselevel serial")(
-    major=2018, minor=10, micro=12, releaselevel="post1", serial=69
+    major=2019, minor=7, micro=20, releaselevel="", serial=69
 )
 
 if __version_info__.releaselevel:
