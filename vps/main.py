@@ -5,6 +5,7 @@ import click
 import logging
 import socket
 import ssl
+from datetime import datetime
 
 from aiohttp import web, web_request
 from typing import Union
@@ -31,12 +32,24 @@ def _handle_debug(
     return debug
 
 
-async def hello(request: web_request.BaseRequest) -> web.Response:
-    print(f"Request = {request}")  # COOPER
-    print(dir(request))  # COOPER
-    print(vars(request))  # COOPER
+async def countdown(request: web_request.BaseRequest) -> web.Response:
+    response = f"<html><head><title>Countdown on {HOSTNAME}</title></head>\n<body>\n"
+    response += "<h1>Countdown</h1>\n"
+
+    events = (
+        ("Mexico", datetime(2019, 11, 6)),
+        ("Chicago Xmas", datetime(2019, 12, 22)),
+        ("Straya", datetime(2020, 1, 17)),
+    )
+    today = datetime.now()
+
+    for en, dt in events:
+        days = (dt - today).days
+        response += f"<p><strong>{en}</strong>: {days} days</p>\n"
+
+    response += "</body>\n</html>"
     try:
-        return web.Response(text=f"Hello from {HOSTNAME}")
+        return web.Response(content_type="text/html", text=response)
     except ssl.SSLError as ssle:
         LOG.error(f"{request} had an SSL Error: {ssle}")
 
@@ -58,7 +71,7 @@ async def async_main(
     ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
     ssl_context.load_cert_chain(ssl_cert, ssl_key)
 
-    https = web.Server(hello)
+    https = web.Server(countdown)
     https_sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
     https_sock.bind(("::", https_port))
 
