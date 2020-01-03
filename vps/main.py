@@ -37,9 +37,10 @@ async def countdown(request: web_request.BaseRequest) -> web.Response:
     response += "<h1>Countdown</h1>\n"
 
     events = (
-        ("Mexico", datetime(2019, 11, 6)),
-        ("Chicago Xmas", datetime(2019, 12, 22)),
         ("Straya", datetime(2020, 1, 17)),
+        ("Someone's 30th Birthday", datetime(2020, 2, 15)),
+        ("Someone's else's 30th Birthday", datetime(2020, 2, 24)),
+        ("Ari's Wedding", datetime(2020, 3, 14)),
     )
     today = datetime.now()
 
